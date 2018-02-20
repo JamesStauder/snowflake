@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
     <head>
-        <title>Snowflake Framework 1.0.1</title>
+        <title>Meltdown - Powered by Snowflake Framework 1.0.1</title>
         <meta http-equiv="x-ua-compatible" content="ie=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800">
         <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/bootstrap-slider.css">
         <link rel="stylesheet" href="/css/style.css">
+        <link rel="icon" href="/assets/meltdown-logo.svg" sizes="any" type="image/svg+xml">
+
     </head>
 
     <body>
 
          <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">Snowflake</a>
+      <a class="navbar-brand" href="#"><img src="/assets/meltdown-logo.svg" width="30px" height="30px" /> Meltdown</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -49,59 +52,68 @@
     <main role="main" class="container-fluid">
 
       <div class="row">
-        <div class="col">
-          <a href="https://placeholder.com">
-            <img src="http://via.placeholder.com/600x900?text=Map+of+Greenland" class="img-fluid">
-            </a>
+        <div class="col-5 left-sidebar">
+            <div class="text-center">
+                <div id="map" class="iframe-container"></div>  
+            </div>
         </div>
-        <div class="col">
-          <form>
-  <div class="form-group">
-    <label for="exampleFormControlInput1">Rainfall</label>
-    
-
-    <input
-    type="text"
-    name="Rainfall"
-    data-provide="slider"
-    data-slider-min="1"
-    data-slider-max="100"
-    data-slider-step="1"
-    data-slider-value="50"
-    data-slider-tooltip="always" />
-
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlSelect1">Average Temperature</label>
-    <input id="ex8" data-provide="slider" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlSelect2">Example multiple select</label>
-    <select multiple class="form-control" id="exampleFormControlSelect2">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlTextarea1">Example textarea</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  </div>
-</form>
-        </div>
-      </div>
+        <div class="col-7 right-sidebar"><!-- right sidebar -->
+          <form class="text-center">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Average Rainfall per year</label>
+                <input
+                type="text"
+                name="Rainfall"
+                data-provide="slider"
+                data-slider-min="1"
+                data-slider-max="100"
+                data-slider-step="1"
+                data-slider-value="50"
+                data-slider-tooltip="always" />
+                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Average Temperature</label>
+                <input
+                type="text"
+                name="Rainfall"
+                data-provide="slider"
+                data-slider-min="1"
+                data-slider-max="100"
+                data-slider-step="1"
+                data-slider-value="50"
+                data-slider-tooltip="always" />
+                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Average Snowfall per year</label>
+                <input
+                type="text"
+                name="Rainfall"
+                data-provide="slider"
+                data-slider-min="1"
+                data-slider-max="100"
+                data-slider-step="1"
+                data-slider-value="50"
+                data-slider-tooltip="always" />
+                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
+              </div>
+             
+            </form>
+        </div><!-- end .right-sidebar -->
+      </div><!-- end .row -->
 
     </main><!-- /.container -->
 
-
+<!-- Logo Source: https://publicdomainvectors.org/en/free-clipart/Drawing-of-ice-rock/31610.html -->
         
         <script src="/js/jquery.min.js"></script>
         <script src="/js/popper.min.js"></script>
         <script src="/js/tether.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
         <script src="/js/bootstrap-slider.min.js"></script>
+         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZbuGSEBqEPNHYvx1MzAIeX3MU6jOHjMw&callback=initMap"
+  type="text/javascript"></script>
         <script src="/js/script.js"></script>
     </body>
 </html>
