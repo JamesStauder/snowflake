@@ -1,0 +1,30 @@
+{
+  "name": "snowflake",
+  "version": "1.0.0",
+  "description": "web interface framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilentAccordion/snowflake.git"
+  },
+  "author": "Silent Accordion",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/SilentAccordion/snowflake/issues"
+  },
+  "homepage": "https://github.com/SilentAccordion/snowflake#readme",
+  "devDependencies": {
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  },
+  "dependencies": {
+    "bootstrap-slider": "^10.0.0",
+    "popper.js": "^1.12.9",
+    "tether": "^1.4.3",
+    "tooltip.js": "^1.1.7"
+  }
+}
