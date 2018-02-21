@@ -1,8 +1,44 @@
+// SASS style sheet */
+// Palette color codes */
+// Palette URL: http://paletton.com/#uid=73i0B0k6-VZ00++2o+aaWOtfmD6 */
+
+// Feel free to copy&paste color codes to your application */
+
+
+// As hex codes */
+
+$color-primary-0: #BEEFEF;	// Main Primary color */
+$color-primary-1: #FFFFFF;
+$color-primary-2: #EAFCFC;
+$color-primary-3: #8ED7D7;
+$color-primary-4: #5DB3B3;
+
+$color-secondary-1-0: #C7CEF2;	// Main Secondary color (1) */
+$color-secondary-1-1: #FFFFFF;
+$color-secondary-1-2: #EDEFFD;
+$color-secondary-1-3: #9DA7DF;
+$color-secondary-1-4: #717EC3;
+
+$color-secondary-2-0: #FFF0CB;	// Main Secondary color (2) */
+$color-secondary-2-1: #FFFFFF;
+$color-secondary-2-2: #FFFAEC;
+$color-secondary-2-3: #FFE6A8;
+$color-secondary-2-4: #FFDC85;
+
+$color-complement-0: #FFE2CB;	// Main Complement color */
+$color-complement-1: #FFFFFF;
+$color-complement-2: #FFF5EC;
+$color-complement-3: #FFCFA8;
+$color-complement-4: #FFBC85;
+
 $white: white;
-$black: #030303;
-$gray: #333;
-$bg-color: #BEEEEF;
+$black: $color-primary-4;
+$gray: $color-primary-3;
+$bg-color: $color-primary-0;
 $font-color: $black;
+
+$brand-primary: $black;
+$slider-primary: $black;
 
 body {
 	padding-top: 5rem;
@@ -10,10 +46,16 @@ body {
     color: $font-color;
 }
 
+nav.bg-dark {
+	background: $color-secondary-1-4 !important;
+}
+
 .iframe-container{
     position: relative;
     width: 100%;
     padding-bottom: 125%; /* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
+    border: 2px solid $color-secondary-2-0;
+    border-radius: .5rem;
 }
 .iframe-container > *{
     display: block;
@@ -34,4 +76,46 @@ blockquote {
 	/*border-left: 2px solid $white;
 	margin-left: 2rem;
 	padding-left: 1rem;*/
+}
+
+input.value {
+	text-align: center;
+	width: 6rem;
+	background: none;
+	border: none;
+	font-size: 1.25rem;
+	line-height: 1.25rem;
+	padding-bottom: 0px;
+}
+
+span.units {
+	font-size: .65rem;
+	color: $gray;
+	white-space: nowrap;
+	clear: left;
+	display: block;
+}
+
+.slider-handle,
+.slider-selection {
+	background: $color-primary-4;
+}
+
+svg.chart {
+	width: 100% !important;
+}
+
+footer {
+	color: $color-primary-3;
+	font-size: .65rem;	
+	h4 {
+		font-size: 1rem;
+		line-height: 1.25rem;		
+	}
+	a {
+		font-size: .65rem;
+		text-decoration: none;
+		font-weight: normal;
+		color: $color-primary-3;
+	}
 }

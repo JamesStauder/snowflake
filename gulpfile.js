@@ -4,7 +4,7 @@ var sass        = require('gulp-sass');
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function() {
-    return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', 'node_modules/bootstrap-slider/src/sass/bootstrap-slider.scss',  'src/scss/*.scss'])
+    return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/*.scss', 'node_modules/bootstrap-slider/src/sass/bootstrap-slider.scss'])
         .pipe(sass())
         .pipe(gulp.dest("src/css"))
         .pipe(browserSync.stream());
@@ -17,7 +17,9 @@ gulp.task('js', function() {
         'node_modules/jquery/dist/jquery.min.js', 
         'node_modules/tether/dist/js/tether.min.js', 
         'node_modules/popper.js/dist/umd/popper.min.js',
-        'node_modules/bootstrap-slider/dist/bootstrap-slider.min.js'])
+        'node_modules/bootstrap-slider/dist/bootstrap-slider.min.js',
+        'node_modules/d3/build/d3.min.js'
+        ])
         .pipe(gulp.dest("src/js"))
         .pipe(browserSync.stream());
 });
@@ -31,6 +33,7 @@ gulp.task('serve', ['sass'], function() {
 
     gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/*.scss'], ['sass']);
     gulp.watch("src/*.html").on('change', browserSync.reload);
+    gulp.watch("src/js/*.js").on('change', browserSync.reload);
 });
 
 gulp.task('default', ['js','serve']);

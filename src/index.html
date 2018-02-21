@@ -13,7 +13,6 @@
         <link rel="icon" href="/assets/meltdown-logo.svg" sizes="any" type="image/svg+xml">
 
     </head>
-
     <body>
 
          <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -48,65 +47,194 @@
         </form> -->
       </div>
     </nav>
-
     <main role="main" class="container-fluid">
 
       <div class="row">
-        <div class="col-5 left-sidebar">
+        <div class="col-12 col-md-5 left-sidebar">
             <div class="text-center">
                 <div id="map" class="iframe-container"></div>  
             </div>
         </div>
-        <div class="col-7 right-sidebar"><!-- right sidebar -->
+        <div class="col-12 col-md-7 right-sidebar"><!-- right sidebar -->
           <form class="text-center">
               <div class="form-group">
-                <label for="exampleFormControlInput1">Average Rainfall per year</label>
-                <input
-                type="text"
-                name="Rainfall"
-                data-provide="slider"
-                data-slider-min="1"
-                data-slider-max="100"
-                data-slider-step="1"
-                data-slider-value="50"
-                data-slider-tooltip="always" />
-                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
-              </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.">Average Rainfall per year</span></label>
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            name="rainfallslider"
+                            class="slider"
+                            value='50"'
+                            data-provide="slider"
+                            data-slider-min="1"
+                            data-slider-max="100"
+                            data-slider-step="1"
+                            data-slider-value='50'
+                            data-slider-tooltip="always" />
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            id="rainfallvalue"
+                            name="rainfallvalue"
+                            class="value"
+                            data-unit-symbol='"'
+                            value='50"' />
+                            <span class="units">Inches per Year</span>
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+
               <div class="form-group">
-                <label for="exampleFormControlSelect1">Average Temperature</label>
-                <input
-                type="text"
-                name="Rainfall"
-                data-provide="slider"
-                data-slider-min="1"
-                data-slider-max="100"
-                data-slider-step="1"
-                data-slider-value="50"
-                data-slider-tooltip="always" />
-                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
-              </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Sea lettuce lettuce water chestnut eggplant winter purslane.">Average Temperature</span></label>
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            name="tempslider"
+                            class="slider"
+                            data-provide="slider"
+                            data-slider-min="1"
+                            data-slider-max="100"
+                            data-slider-step="1"
+                            data-slider-value='42'
+                            data-slider-tooltip="always" />
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            id="tempvalue"
+                            name="tempvalue"
+                            class="value"
+                            data-unit-symbol='&deg;'
+                            value="42&deg;" /> <span class="units">celsius</span>
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+
+
+             <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Buffalo ham hock t-bone, strip steak capicola bacon tail brisket burgdoggen meatball frankfurter.">Average Snowfall per year</span></label>
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            name="snowfallslider"
+                            class="slider"
+                            value='50"'
+                            data-provide="slider"
+                            data-slider-min="1"
+                            data-slider-max="120"
+                            data-slider-step="1"
+                            data-slider-value='85'
+                            data-slider-tooltip="always" />
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            id="snowfallvalue"
+                            name="snowfallvalue"
+                            class="value"
+                            data-unit-symbol='"'
+                            value='85"' />
+                            <span class="units">Inches per Year</span>
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+
               <div class="form-group">
-                <label for="exampleFormControlSelect1">Average Snowfall per year</label>
-                <input
-                type="text"
-                name="Rainfall"
-                data-provide="slider"
-                data-slider-min="1"
-                data-slider-max="100"
-                data-slider-step="1"
-                data-slider-value="50"
-                data-slider-tooltip="always" />
-                <blockquote class="text-left">Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</blockquote>
-              </div>
-             
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Cow filet mignon alcatra meatball salami porchetta bresaola tail shank kielbasa.">Timeline Years</span></label>
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            name="timespanslider"
+                            class="slider"
+                            value='1000'
+                            data-provide="slider"
+                            data-slider-min="0"
+                            data-slider-max="2000"
+                            data-slider-step="20"
+                            data-slider-value='1000'
+                            data-slider-tooltip="always" />
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            id="timespanvalue"
+                            name="timespanvalue"
+                            class="value"
+                            data-unit-symbol=''
+                            value='1000' />
+                            <span class="units">Years</span>
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+         
+
             </form>
         </div><!-- end .right-sidebar -->
       </div><!-- end .row -->
 
-    </main><!-- /.container -->
 
+      <div class="row">
+        <div class="col-12">
+            <h1>Chart Data</h1>
+            <svg class="chart" width="1000" height="300"></svg>
+            <input
+                            type="text"
+                            name="chartslider"
+                            class="slider"
+                            value='1000'
+                            data-provide="slider"
+                            data-slider-min="0"
+                            data-slider-max="2000"
+                            data-slider-step="20"
+                            data-slider-value='1000'
+                            data-slider-tooltip="always" />
+        </div>
+
+      </div>
+
+    </main><!-- /.container -->
+    <footer class="p-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h4 data-container="body" data-toggle="popover" data-placement="top" data-content="Licensed under The 3-Clause BSD License">Snowflake 1.0.1</h4>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 <!-- Logo Source: https://publicdomainvectors.org/en/free-clipart/Drawing-of-ice-rock/31610.html -->
-        
+
+
+
+        <script src="/js/d3.min.js"></script>
         <script src="/js/jquery.min.js"></script>
         <script src="/js/popper.min.js"></script>
         <script src="/js/tether.min.js"></script>
