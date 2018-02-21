@@ -54,7 +54,13 @@ span.units {
   background: #5DB3B3; }
 
 svg.chart {
-  width: 100% !important; }
+  /*width: 100% !important;*/
+  background: #EDEFFD;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #FFF0CB;
+  border-radius: .5rem; }
 
 footer {
   color: #8ED7D7;
