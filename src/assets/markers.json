@@ -1,0 +1,127 @@
+[
+  {
+    "Label": "Nioghalvfjerdsbrae",
+    "ID": 1000,
+    "Location": "79°0′N 25°0′W",
+    "Latitude": "79.0",
+    "Longitude": "25.0",
+    "polygon": [
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      }
+    ]
+  },
+  {
+    "Label": "Kangerlussuaq",
+    "ID": 2000,
+    "Location": "68°38′N 33°0′W",
+    "Latitude": "68.633",
+    "Longitude": "33.0",
+    "polygon": [
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      }
+    ]
+  },
+  {
+    "Label": "Helheim",
+    "ID": 3000,
+    "Location": "66°21′N 38°12′W",
+    "Latitude": "66.35",
+    "Longitude": "38.2",
+    "polygon": [
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      }
+    ]
+  },
+  {
+    "Label": "Jakobshavn",
+    "ID": 4000,
+    "Location": "69°10′N 49°50′W",
+    "Latitude": "69.16",
+    "Longitude": "59.83",
+    "polygon": [
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      }
+    ]
+  },
+  {
+    "Label": "Petermann",
+    "ID": 5000,
+    "Location": "80°45′N 60°45′W",
+    "Latitude": "80.75",
+    "Longitude": "60.75",
+    "polygon": [
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      },
+      {
+        "Latitude": -42.8822,
+        "Longitude": 81.8822
+      }
+    ]
+  }
+]
