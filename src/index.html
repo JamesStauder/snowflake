@@ -14,7 +14,6 @@
 
     </head>
     <body>
-
          <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#"><img src="/assets/meltdown-logo.svg" width="30px" height="30px" /> Meltdown</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +31,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Charts</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item d-none">
             <a class="nav-link disabled" href="#">Profit</a>
           </li>
           
@@ -70,18 +69,19 @@
               <div class="form-group">
                 <div class="row">
                     <div class="col">
-                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.">Average Rainfall per year</span></label>
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Reduction of friction at the base of an ice sheet or glacier due to lubrication by meltwater. This can allow the glacier or ice sheet to slide over its base. Meltwater may be produced by pressure-induced melting, friction or geothermal heat, or surface melt may drain to the base through holes in the ice.">Basal lubrication</span></label>
                     </div>
                     <div class="col">
                         <input
                             type="text"
                             name="rainfallslider"
-                            class="slider"
+                            id="rainfallslider"
+                            class="slider rainfallslider"
                             value='50"'
                             data-provide="slider"
-                            data-slider-min="1"
+                            data-slider-min="0"
                             data-slider-max="100"
-                            data-slider-step="1"
+                            data-slider-step="5"
                             data-slider-value='50'
                             data-slider-tooltip="always" />
                     </div>
@@ -91,9 +91,9 @@
                             id="rainfallvalue"
                             name="rainfallvalue"
                             class="value"
-                            data-unit-symbol='"'
-                            value='50"' />
-                            <span class="units">Inches per Year</span>
+                            data-unit-symbol=''
+                            value='50' />
+                            <!-- <span class="units">Inches per Year</span> -->
                     </div>
                     <div class="col-12">
                         <blockquote class="text-left"></blockquote>
@@ -104,18 +104,18 @@
               <div class="form-group">
                 <div class="row">
                     <div class="col">
-                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Sea lettuce lettuce water chestnut eggplant winter purslane.">Average Temperature</span></label>
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="A glacier terminus, toe, or snout, is the end of a glacier at any given point in time. The position of a glacier terminus is also impacted by localized or regional temperature change over time.">Terminus position</span></label>
                     </div>
                     <div class="col">
                         <input
                             type="text"
                             name="tempslider"
-                            class="slider"
+                            class="slider tempslider"
                             data-provide="slider"
-                            data-slider-min="1"
+                            data-slider-min="0"
                             data-slider-max="100"
-                            data-slider-step="1"
-                            data-slider-value='42'
+                            data-slider-step="5"
+                            data-slider-value='50'
                             data-slider-tooltip="always" />
                     </div>
                     <div class="col-3">
@@ -124,43 +124,8 @@
                             id="tempvalue"
                             name="tempvalue"
                             class="value"
-                            data-unit-symbol='&deg;'
-                            value="42&deg;" /> <span class="units">celsius</span>
-                    </div>
-                    <div class="col-12">
-                        <blockquote class="text-left"></blockquote>
-                    </div>
-                </div><!-- end .row -->
-              </div><!-- end .form-group -->
-
-
-             <div class="form-group">
-                <div class="row">
-                    <div class="col">
-                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Buffalo ham hock t-bone, strip steak capicola bacon tail brisket burgdoggen meatball frankfurter.">Average Snowfall per year</span></label>
-                    </div>
-                    <div class="col">
-                        <input
-                            type="text"
-                            name="snowfallslider"
-                            class="slider"
-                            value='50"'
-                            data-provide="slider"
-                            data-slider-min="1"
-                            data-slider-max="120"
-                            data-slider-step="1"
-                            data-slider-value='85'
-                            data-slider-tooltip="always" />
-                    </div>
-                    <div class="col-3">
-                        <input
-                            type="text"
-                            id="snowfallvalue"
-                            name="snowfallvalue"
-                            class="value"
-                            data-unit-symbol='"'
-                            value='85"' />
-                            <span class="units">Inches per Year</span>
+                            data-unit-symbol=''
+                            value="50" /> <!-- <span class="units">celsius</span> -->
                     </div>
                     <div class="col-12">
                         <blockquote class="text-left"></blockquote>
@@ -171,18 +136,52 @@
               <div class="form-group">
                 <div class="row">
                     <div class="col">
-                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Cow filet mignon alcatra meatball salami porchetta bresaola tail shank kielbasa.">Timeline Years</span></label>
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Ice core and borehole studies along flowlines in ice sheets show that the ice crystal structure and flow properties evolve together with strain and rotation along the particle paths.">Ice rheology</span></label>
                     </div>
                     <div class="col">
                         <input
                             type="text"
                             name="timespanslider"
-                            class="slider"
+                            class="slider timespanslider"
                             value='1000'
                             data-provide="slider"
                             data-slider-min="0"
-                            data-slider-max="2000"
-                            data-slider-step="20"
+                            data-slider-max="100"
+                            data-slider-step="5"
+                            data-slider-value='50'
+                            data-slider-tooltip="always" />
+                    </div>
+                    <div class="col-3">
+                        <input
+                            type="text"
+                            id="timespanvalue"
+                            name="timespanvalue"
+                            class="value"
+                            data-unit-symbol=''
+                            value='50' />
+                            <!-- <span class="units">Years</span> -->
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+
+              <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="Ice core and borehole studies along flowlines in ice sheets show that the ice crystal structure and flow properties evolve together with strain and rotation along the particle paths.">Timespan</span></label>
+                    </div>
+                    <div class="col">
+                        <input
+                            type="text"
+                            name="timespanslider"
+                            class="slider timespanslider"
+                            value='1000'
+                            data-provide="slider"
+                            data-slider-min="500"
+                            data-slider-max="1000"
+                            data-slider-step="50"
                             data-slider-value='1000'
                             data-slider-tooltip="always" />
                     </div>
@@ -202,10 +201,43 @@
                 </div><!-- end .row -->
               </div><!-- end .form-group -->
          
+               <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="exampleFormControlInput1"><span data-toggle="tooltip" title="A scenario is a story line or image that describes a potential future, developed to inform decision-making under uncertainty.">Climate changes</span></label>
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked="checked">
+                          <label class="form-check-label" for="inlineRadio1">A1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                          <label class="form-check-label" for="inlineRadio1">A2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                          <label class="form-check-label" for="inlineRadio1">B1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                          <label class="form-check-label" for="inlineRadio1">B2</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        
+                    </div>
+                    <div class="col-12">
+                        <blockquote class="text-left"></blockquote>
+                    </div>
+                </div><!-- end .row -->
+              </div><!-- end .form-group -->
+
             <div class="form-group">
                 <div class="row">
                     <div class="col-12">
                         <div class="text-center">
+                            <input type="hidden" name="selectedID" id="selectedID" class="selectedID" value="" />
                             <input type="button" class="btn btn-primary" id="generate" name="generate" value="Generate Charts">
                         </div>
                     </div>
@@ -227,7 +259,7 @@
         </div><!-- end .right-sidebar -->
       </div><!-- end .row -->
 
-
+<div class="chart-data d-none">
       <div class="row mt-5">
         <div class="col-12 d-none">
             <!-- Sample Stock Data -->
@@ -249,36 +281,48 @@
             
         </div>
         <div class="col-12">
-            <div class="text-center p-3">
+            <div class="text-center p-3 slider-wide">
                 <input
                     type="text"
                     name="chartslider"
-                    class="slider"
-                    value='1000'
+                    id="chartslider"
+                    class="slider chartslider"
+                    value='0'
                     data-provide="slider"
                     data-slider-min="0"
-                    data-slider-max="2000"
+                    data-slider-max="1000"
                     data-slider-step="20"
-                    data-slider-value='1000'
+                    data-slider-value='0'
                     data-slider-tooltip="always" />
             </div>
         </div>
+        <div class="col-12 text-center">
+            <input
+                type="text"
+                id="chartvalue"
+                name="chartvalue"
+                class="value"
+                data-unit-symbol=''
+                value='0' />
+                <span class="units">Years</span>
+        </div>
         <div class="col-4">
             <div class="text-center">
-                <input type="button" class="btn btn-primary" name="" value="Rewind">
+                <input type="button" class="btn btn-primary" name="beginning" id="beginning" value="Reset to Beginning">
             </div>
         </div>
         <div class="col-4">
             <div class="text-center">
-                <input type="button" class="btn btn-primary" name="" value="Play">
+                <input type="button" class="btn btn-primary" name="play" id="play" value="Play">
+                <input type="button" class="btn btn-primary d-none" name="pause" id="pause" value="Pause">
             </div>
         </div>
         <div class="col-4">
             <div class="text-center">
-                <input type="button" class="btn btn-primary" name="" value="Fast Forward">
+                <input type="button" class="btn btn-primary" name="end" id="end" value="Advance to End">
             </div>
         </div>
-        <div class="col-12">
+        <div class="col-12 d-none">
             <h2 class="mt-4">Section title</h2>
             <div class="card">
   <div class="card-header">
@@ -353,7 +397,7 @@
         </div>
 </div>
       </div>
-
+</div>
     </main><!-- /.container -->
     <footer class="mt-5 p-3">
         <div class="container-fluid">

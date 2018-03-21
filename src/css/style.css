@@ -1,20 +1,20 @@
 body {
   padding-top: 5rem;
-  background: #BEEFEF;
-  color: #5DB3B3; }
+  background: #E3E3E3;
+  color: #670C28; }
 
 nav.bg-dark {
-  background: #717EC3 !important; }
+  background: #744D0E !important; }
 
 h2, h3, h4 {
-  border-bottom: 1px solid #FFF0CB; }
+  border-bottom: 1px solid #A7A7A7; }
 
 .iframe-container {
   position: relative;
   width: 100%;
   padding-bottom: 125%;
   /* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
-  border: 2px solid #FFF0CB;
+  border: 2px solid #A7A7A7;
   border-radius: .5rem; }
 
 .iframe-container > * {
@@ -31,7 +31,7 @@ h2, h3, h4 {
 
 blockquote {
   font-size: .85rem;
-  font-color: #8ED7D7;
+  font-color: #670C28;
   /*border-left: 2px solid $white;
 	margin-left: 2rem;
 	padding-left: 1rem;*/ }
@@ -47,30 +47,34 @@ input.value {
 
 textarea#console {
   font-size: .65rem;
-  color: #FFBC85;
-  border: 2px solid #FFF0CB;
+  color: #35670C;
+  border: 2px solid #A7A7A7;
   border-radius: .5rem; }
 
 span.units {
   font-size: .65rem;
-  color: #8ED7D7;
+  color: #670C28;
   white-space: nowrap;
   clear: left;
   display: block; }
 
+.slider-wide .slider {
+  width: 100% !important;
+  max-width: 1000px; }
+
 .slider-handle,
 .slider-selection {
-  background: #5DB3B3; }
+  background: #670C28; }
 
 svg.chart {
   max-width: 1000px !important;
   width: 100% !important;
-  background: #EDEFFD;
+  background: #FFFEFB;
   height: 50%;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid #FFF0CB;
+  border: 2px solid #A7A7A7;
   border-radius: .5rem; }
 
 .area {
@@ -78,8 +82,8 @@ svg.chart {
   /*fill: url('../assets/pattern_of_stone_texture.jpg');*/ }
 
 footer {
-  color: #9DA7DF;
-  background: #FFFAEC;
+  color: #744D0E;
+  background: #F9FAFC;
   font-size: .75rem; }
   footer h4 {
     font-size: .75rem; }
@@ -87,4 +91,4 @@ footer {
     font-size: .75rem;
     text-decoration: none;
     font-weight: normal;
-    color: #9DA7DF; }
+    color: #744D0E; }
