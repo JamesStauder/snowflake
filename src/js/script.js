@@ -11,8 +11,8 @@ $(function () {
 	// Update Slider on change
 	$(".slider").on("slide", function(slideEvt) {
 		if(this.name != undefined){
-			value = slideEvt.value+$('#'+this.name.replace('slider','value')).data('unit-symbol');
-			$('#'+this.name.replace('slider','value')).val(value);	
+			value = slideEvt.value+$('#'+this.name.replace('Slider','Value')).data('unit-symbol');
+			$('#'+this.name.replace('Slider','Value')).val(value);	
 		}		
 	}); // end on(slide)
 
@@ -22,24 +22,30 @@ $(function () {
 			return;
 		}
   		log('Generating Chart');
-  		log('Rainfall: '+$('.rainfallslider').val());
-  		log('Temperature: '+$('.tempslider').val());
-  		log('Snowfall: '+$('.snowfallslider').val());
+  		log('Basal Lubrication: '+$('.basalLubricationSlider').val());
+  		log('Terminus Position: '+$('.terminusPositionSlider').val());
+  		log('Ice Rheology: '+$('.iceRheologySlider').val());
+  		log('Climate Change: '+$('.climateChangeValue').val());
+  		
   		log('Timespan: '+$('.timespanslider').val());
   		log('Selected ID: '+$('.selectedID').val());
   		
   		log('Starting AJAX');
 
-  		surface();
+  		surface($('.selectedID').val());
 
-  		chartSlider = $("#chartslider").slider({'max':$('.timespanslider').val()});
+  		chartSlider = $("#chartSlider").slider({'max':$('.timespanSlider').val()});
   		
 	    // chartSlider.slider('setAttribute', );  
 	    chartSlider.slider('setValue', 0);  
 	    $('#chartvalue').val(0);
 
   		$('.chart-data').removeClass('d-none');
-  		$('.chart-data').show();  		
+  		$('.chart-data').show();  	
+
+  		$('html, body').animate({
+		    scrollTop: $(".chart-data").offset().top-60
+		}, 1000);	
   	});
 
 	$('#beginning').on('click', function(){
@@ -88,6 +94,8 @@ $(function () {
 function log(message){
 	value = $('textarea#console').val() + Date() + ' ' + message + "\n";
 	$('textarea#console').val(value);
+	var elem = document.getElementById('console');
+  	elem.scrollTop = elem.scrollHeight;	
 }
 
 var TILE_URL = 'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg';
@@ -97,6 +105,8 @@ var map;
 var mapEl;
 var layer;
 var layerID = 'my-custom-layer';
+
+var markers = new Array();
 
 function initMap() {
         var greenland = new google.maps.LatLng(71.7069, -42.6043);
@@ -132,13 +142,24 @@ function initMap() {
 				      //   scaledSize: new google.maps.Size(50, 50),
 				      //   url: '/assets/meltdown-logo.svg'
 				      // },
+				    // https://sites.google.com/site/gmapsdevelopment/  
+				    icon: 'http://maps.google.com/mapfiles/ms/micons/red-pushpin.png',
 			        title:      data.Label,
 			        ID: data.ID
 			    });
 
+			    markers.push(marker);
+
 			    marker.addListener('click', function() {
 		          log('Marker '+this.title+' '+this.ID+' Selected');
 		          $('.selectedID').val(this.ID);
+		          
+		          $.each(markers, function(){
+		          	//log(this);
+		          	this.setIcon('http://maps.google.com/mapfiles/ms/micons/red-pushpin.png');
+		          });
+		          marker.setIcon('http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png');
+
 		        });
 
 			    // var details = data.website + ", " + data.phone + ".";
@@ -208,9 +229,18 @@ function project(latLng) {
 	    TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
 }      
       
-function surface(){
+function surface(glacier){
 	log('Building Surface Chart');
 
+	// Check for invalid Glacier before loading file
+	if( ! Number.isInteger( parseInt(glacier) ) ){
+		log('Invalid Glacier');
+		return;
+	}
+
+	d3.select("svg.surface g").remove();
+	d3.select("svg.surface path").remove();
+	// svg.selectAll("*").remove();
 	var svg = d3.select("svg.surface"),
 	    margin = {top: 20, right: 20, bottom: 30, left: 50},
 	    width = +svg.attr("width") - margin.left - margin.right,
@@ -224,62 +254,64 @@ function surface(){
 	var y = d3.scaleLinear()
 	    .rangeRound([height, 0]);
 
+	y_inc = 0;
 	var line = d3.line()
-	    .x(function(d) { return x(d.year); })
-	    .y(function(d) { return y(d.surface_1); });
+	    .x(function(d) { return x(d); })
+	    .y(function(d) { y_inc = y_inc + 10; return y_inc; });
+	    //.y(function(d) { return y(d); });
 
 	var line2 = d3.line()
-	    .x(function(d) { return x(d.year); })
-	    .y(function(d) { return y(d.surface_2); });
+	    .x(function(d) { return x(d.bed); })
+	    .y(function(d) { return y(d.bed); });
 
 	// define the area
 	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
-	  var area = d3.area()
-	    .x(function(d) { return x(d.year); })
-	    .y0(height)
-	    .y1(function(d) { return y(d.surface_1); });
+	  // var area = d3.area()
+	  //   .x(function(d) { return x(d.year); })
+	  //   .y0(height)
+	  //   .y1(function(d) { return y(d.surface_1); });
 	    
 	// define the area
 	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
-	  var area2 = d3.area()
-	    .x(function(d) { return x(d.year); })
-	    .y0(height)
-	    .y1(function(d) { return y(d.surface_2); });        
+	  // var area2 = d3.area()
+	  //   .x(function(d) { return x(d.year); })
+	  //   .y0(height)
+	  //   .y1(function(d) { return y(d.surface_2); });        
 
-
-	d3.tsv("assets/surface-sample.txt", function(d) {
-	  // d.date = parseTime(d.date);
-	  // d.close = +d.close;
-	  return d;
-	}, function(error, data) {
+	// log("/assets/"+glacier+".json");
+	d3.json("/assets/"+glacier+".json", function(error, data) {
 	  if (error) throw error;
 
-	  x.domain(d3.extent(data, function(d) { return +d.year; }));
-	  y.domain(d3.extent(data, function(d) { return +d.surface_2; }));
+	  // console.log(data.bed);
+	  // console.log(d3.extent(data.bed, function(d) { console.log(d); return +d; }));
+	  // d = data.bed;
 
+	  x.domain(d3.extent(data.bed, function(d) { return +d; }));
+	  //y = d3.scale.linear().range([0,width]);
+
+	  y.domain(d3.extent(data.bed, function(d) { return +d; }));
 	  
+	  // g.append("defs")
+		 // .append('pattern')
+		 // .attr('id', 'bedrock')
+		 // .attr('patternUnits', 'userSpaceOnUse')
+		 // .attr('width', 1024)
+		 // .attr('height', 768)
+		 // .append("image")
+		 // .attr("xlink:href", "./assets/pattern_of_stone_texture.jpg")
+		 // .attr('width', 1024)
+		 // .attr('height', 768);
 
-	  g.append("defs")
-		 .append('pattern')
-		 .attr('id', 'bedrock')
-		 .attr('patternUnits', 'userSpaceOnUse')
-		 .attr('width', 1024)
-		 .attr('height', 768)
-		 .append("image")
-		 .attr("xlink:href", "./assets/pattern_of_stone_texture.jpg")
-		 .attr('width', 1024)
-		 .attr('height', 768);
-
-      g.select("defs")
-		 .append('pattern')
-		 .attr('id', 'glacier')
-		 .attr('patternUnits', 'userSpaceOnUse')
-		 .attr('width', 1024)
-		 .attr('height', 768)
-		 .append("image")
-		 .attr("xlink:href", "./assets/pattern_of_snow_texture.jpg")
-		 .attr('width', 1024)
-		 .attr('height', 768);
+   //    g.select("defs")
+		 // .append('pattern')
+		 // .attr('id', 'glacier')
+		 // .attr('patternUnits', 'userSpaceOnUse')
+		 // .attr('width', 1024)
+		 // .attr('height', 768)
+		 // .append("image")
+		 // .attr("xlink:href", "./assets/pattern_of_snow_texture.jpg")
+		 // .attr('width', 1024)
+		 // .attr('height', 768);
 
 	  g.append("g")
 	      .attr("transform", "translate(0," + height + ")")
@@ -297,38 +329,40 @@ function surface(){
 	      .attr("text-anchor", "end")
 	      .text("Depth (m)");
 
-	  g.append("path")
-	      .datum(data)
-	      .attr("fill", "none")
-	      .attr("stroke", "white")
-	      .attr("stroke-linejoin", "round")
-	      .attr("stroke-linecap", "round")
-	      .attr("stroke-width", 2.0)
-	      .attr("d", line);
+	  console.log(data.bed);
 
 	  g.append("path")
-	      .datum(data)
+	      .datum(data.bed)
 	      .attr("fill", "none")
 	      .attr("stroke", "steelblue")
 	      .attr("stroke-linejoin", "round")
 	      .attr("stroke-linecap", "round")
 	      .attr("stroke-width", 2.0)
-	      .attr("d", line2);  
+	      .attr("d", line);
+
+	  // g.append("path")
+	  //     .datum(data)
+	  //     .attr("fill", "none")
+	  //     .attr("stroke", "steelblue")
+	  //     .attr("stroke-linejoin", "round")
+	  //     .attr("stroke-linecap", "round")
+	  //     .attr("stroke-width", 2.0)
+	  //     .attr("d", line2);  
 
 	      // add the area
-      g.append("path")
-       .data([data])
-       .attr("class", "area")
-       .attr("fill", "url(#glacier)")
-       .attr("d", area);     
+      // g.append("path")
+      //  .data([data])
+      //  .attr("class", "area")
+      //  .attr("fill", "url(#glacier)")
+      //  .attr("d", area);     
 
 
-	  // add the area
-      g.append("path")
-       .data([data])
-       .attr("class", "area")
-       .attr("fill", "url(#bedrock)")
-       .attr("d", area2);
+	  // // add the area
+   //    g.append("path")
+   //     .data([data])
+   //     .attr("class", "area")
+   //     .attr("fill", "url(#bedrock)")
+   //     .attr("d", area2);
 
      
     
