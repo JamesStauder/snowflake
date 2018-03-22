@@ -12,7 +12,7 @@ function tickFunction( )
   if('playing' == status){
   	// log('tick');
   	// https://stackoverflow.com/questions/33474379/dynamically-set-value-of-bootstrap-slider
-  	var newValue = parseInt($('#chartValue').val())+20;
+  	var newValue = parseInt($('.chartSlider').val())+20;
 
   	if( newValue > $('.timespanSlider').val() ){
   		log('Paused');
@@ -63,9 +63,9 @@ $(function () {
   		log('Basal Lubrication: '+$('.basalLubricationSlider').val());
   		log('Terminus Position: '+$('.terminusPositionSlider').val());
   		log('Ice Rheology: '+$('.iceRheologySlider').val());
-  		log('Climate Change: '+$('.climateChangeValue').val());
+  		log('Climate Change: '+$('.climateChangeValue:checked').val());
   		
-  		log('Timespan: '+$('.timespanslider').val());
+  		log('Timespan: '+$('.timespanSlider').val());
   		log('Selected ID: '+$('.selectedID').val());
   		
   		log('Starting AJAX');
@@ -95,6 +95,7 @@ $(function () {
 		$('.chartSlider').val(0);
 		$('#pause').hide();
 		$('#play').show();
+		surface($('.selectedID').val());
 	});
 
 	$('#end').on('click', function(){
@@ -106,6 +107,7 @@ $(function () {
 		$('.chartSlider').val($('.timespanSlider').val());
 		$('#pause').hide();
 		$('#play').show();
+		surface($('.selectedID').val());
 	});
 
 	$('#play').on('click', function(){
