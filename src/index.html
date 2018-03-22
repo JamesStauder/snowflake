@@ -15,20 +15,20 @@
     </head>
     <body>
          <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#"><img src="/assets/meltdown-logo.svg" width="30px" height="30px" /> Meltdown</a>
+      <a class="navbar-brand" href="/"><img src="/assets/meltdown-logo.svg" width="30px" height="30px" /> Meltdown</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <li class="nav-item active d-none">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item d-none">
             <a class="nav-link" href="#">Map</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item d-none">
             <a class="nav-link" href="#">Charts</a>
           </li>
           <li class="nav-item d-none">
@@ -178,8 +178,8 @@
                     <div class="col">
                         <input
                             type="text"
-                            name="timespanslider"
-                            class="slider timespanslider"
+                            name="timespanSlider"
+                            class="slider timespanSlider"
                             value='1000'
                             data-provide="slider"
                             data-slider-min="500"
@@ -191,8 +191,8 @@
                     <div class="col-3">
                         <input
                             type="text"
-                            id="timespanvalue"
-                            name="timespanvalue"
+                            id="timespanValue"
+                            name="timespanValue"
                             class="value"
                             data-unit-symbol=''
                             value='1000' />

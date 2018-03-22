@@ -1,6 +1,37 @@
 var status = 'stopped';
 var TILE_SIZE = 256;
 
+// https://stackoverflow.com/questions/8663246/javascript-timer-loop
+
+setInterval(tickFunction, 1000);
+
+function tickFunction( )
+{
+  //this will repeat every 5 seconds
+  //you can reset counter here
+  if('playing' == status){
+  	// log('tick');
+  	// https://stackoverflow.com/questions/33474379/dynamically-set-value-of-bootstrap-slider
+  	var newValue = parseInt($('#chartValue').val())+20;
+
+  	if( newValue > $('.timespanSlider').val() ){
+  		log('Paused');
+  		status = 'stopped';
+		$('#pause').hide();
+		$('#play').show();
+  		return;
+  	}
+
+  	$('#chartValue').val(newValue);
+  	chartSlider = $("#chartSlider").slider({'max':$('.timespanSlider').val()});
+	chartSlider.slider('setValue', newValue);
+	$('.chartSlider').attr('data-value',newValue);
+	$('.chartSlider').val(newValue);
+    surface($('.selectedID').val());
+  }
+  
+}
+
 $(function () {
 
 	log('Starting....');
@@ -13,12 +44,15 @@ $(function () {
 		if(this.name != undefined){
 			value = slideEvt.value+$('#'+this.name.replace('Slider','Value')).data('unit-symbol');
 			$('#'+this.name.replace('Slider','Value')).val(value);	
-		}
+		}		
+		
+	}); // end on(slide)
+
+	$(".slider").on("change", function(slideEvt) {
 		if(this.name == 'chartSlider'){
 			surface($('.selectedID').val());	
 		}
-		
-	}); // end on(slide)
+	}); // end on(change)		
 
 	$('input#generate').on('click',function(){
 		if( $('.selectedID').val() == ''){
@@ -161,9 +195,10 @@ function initMap() {
 		          $('.selectedID').val(this.ID);
 		          
 		          $.each(markers, function(){
-		          	//log(this);
+		          	// Turn all markers Red
 		          	this.setIcon('http://maps.google.com/mapfiles/ms/micons/red-pushpin.png');
 		          });
+		          // Turn this marker Green
 		          marker.setIcon('http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png');
 
 		        });
@@ -236,7 +271,7 @@ function project(latLng) {
 }      
       
 function surface(glacier){
-	log('Building Surface Chart');
+	// log('Building Surface Chart');
 
 	// Check for invalid Glacier before loading file
 	if( ! Number.isInteger( parseInt(glacier) ) ){
@@ -245,7 +280,7 @@ function surface(glacier){
 	}
 
 	d3.select("svg.surface g").remove();
-	d3.select("svg.surface path").remove();
+	// d3.select("svg.surface path").remove();
 	// svg.selectAll("*").remove();
 	var svg = d3.select("svg.surface"),
 	    margin = {top: 20, right: 20, bottom: 30, left: 50},
@@ -343,8 +378,6 @@ function surface(glacier){
 	      .attr("text-anchor", "end")
 	      .text("Depth (m)");
 
-	  // console.log(data.bed);
-
 	  bed_data = new Array();
 
 	  var x_index = 0;
@@ -360,9 +393,6 @@ function surface(glacier){
 	  	var map_data = {x: 100-(x_index++)*(100/data.bed.length),y: v}
 	  	surface_data.push(map_data);
 	  });
-
-	  // console.log(surface_data);
-	  // return;
 
 	  g.append("path")
 	      .datum(bed_data)
@@ -384,7 +414,7 @@ function surface(glacier){
 	      .attr("stroke-width", 2.0)
 	      .attr("d", line2);  
 
-	      // add the area
+	  // add the area
       g.append("path")
        .datum(surface_data)
        // .datum(data.surface[$('#chartValue').val()])
@@ -399,10 +429,6 @@ function surface(glacier){
        .attr("class", "area")
        .attr("fill", "url(#bedrock)")
        .attr("d", area2);
-
-     
-    
-
 
 	}); // end tsv load 
 }
