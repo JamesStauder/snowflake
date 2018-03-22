@@ -145,6 +145,31 @@ var layer;
 var layerID = 'my-custom-layer';
 
 var markers = new Array();
+var coordInfoWindows = new Array();
+
+function createInfoWindowContent(latLng, title, description) {
+        // var scale = 1 << zoom;
+
+        // var worldCoordinate = project(latLng);
+
+        // var pixelCoordinate = new google.maps.Point(
+        //     Math.floor(worldCoordinate.x * scale),
+        //     Math.floor(worldCoordinate.y * scale));
+
+        // var tileCoordinate = new google.maps.Point(
+        //     Math.floor(worldCoordinate.x * scale / TILE_SIZE),
+        //     Math.floor(worldCoordinate.y * scale / TILE_SIZE));
+
+        return [
+          title,
+          description,
+          'LatLng: ' + latLng,
+          //'Zoom level: ' + zoom,
+          // 'World Coordinate: ' + worldCoordinate,
+          // 'Pixel Coordinate: ' + pixelCoordinate,
+          // 'Tile Coordinate: ' + tileCoordinate
+        ].join('<br>');
+      }
 
 function initMap() {
         var greenland = new google.maps.LatLng(71.7069, -42.6043);
@@ -171,6 +196,8 @@ function initMap() {
 
 			    var latLng = new google.maps.LatLng(data.Latitude, data.Longitude);
 
+			    log(data.description);
+
 			    var marker = new google.maps.Marker({
 			        position:   latLng,
 			        map:        map,
@@ -183,21 +210,35 @@ function initMap() {
 				    // https://sites.google.com/site/gmapsdevelopment/  
 				    icon: 'http://maps.google.com/mapfiles/ms/micons/red-pushpin.png',
 			        title:      data.Label,
-			        ID: data.ID
+			        ID: data.ID,
+			        description: data.Description
 			    });
 
 			    markers.push(marker);
 
+
 			    marker.addListener('click', function() {
-		          log('Marker '+this.title+' '+this.ID+' Selected');
-		          $('.selectedID').val(this.ID);
-		          
-		          $.each(markers, function(){
-		          	// Turn all markers Red
-		          	this.setIcon('http://maps.google.com/mapfiles/ms/micons/red-pushpin.png');
-		          });
-		          // Turn this marker Green
-		          marker.setIcon('http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png');
+					log('Marker '+this.title+' '+this.ID+' Selected');
+					$('.selectedID').val(this.ID);
+
+					$.each(markers, function(){
+						// Turn all markers Red
+						this.setIcon('http://maps.google.com/mapfiles/ms/micons/red-pushpin.png');
+					});
+					// Turn this marker Green
+					marker.setIcon('http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png');
+
+					$.each(coordInfoWindows, function(){
+						// Turn off all coordInfoWindows
+						this.close(map);
+					});
+
+					var coordInfoWindow = new google.maps.InfoWindow();
+					coordInfoWindow.setContent(createInfoWindowContent(latLng, this.title, this.description ));
+					coordInfoWindow.setPosition(latLng);
+					coordInfoWindow.open(map);
+
+					coordInfoWindows.push(coordInfoWindow);
 
 		        });
 
@@ -302,6 +343,10 @@ function surface(glacier){
 	x.domain([100,0]);
 	y.domain([-2000,2000]);
 
+	var sealevel = d3.line()
+	    .x(function(d) { return x(d.x); })
+	    .y(122);
+	    //.y(function(d) { return y(d); });
 
 
 	var line_x = 0;
@@ -435,6 +480,26 @@ function surface(glacier){
        .attr("id","bedrock-area")
        .attr("fill", "url(#bedrock)")
        .attr("d", area2);
+
+    g.append("path")
+	      .datum(bed_data)
+	      .attr("fill", "none")
+	      .attr("id","sealevel")
+	      .attr("stroke", "deepskyblue")
+	      .attr("stroke-linejoin", "round")
+	      .attr("stroke-linecap", "round")
+	      .attr("stroke-width", 2.0)
+	      .attr("d", sealevel);   
+
+	g.append("g")
+	      .call(d3.axisLeft(y))
+	    .append("text")
+	      .attr("fill", "#000")
+	      // .attr("transform", "rotate(-90)")
+	      .attr("y", 110)
+	      .attr("dy", "0.71em")
+	      .attr("text-anchor", "end")
+	      .text("Sealevel  |");
 
 	}); // end tsv load 
 }

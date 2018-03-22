@@ -5,6 +5,7 @@
     "Location": "79°0′N 25°0′W",
     "Latitude": "79.0",
     "Longitude": "-25.0",
+    "Description": "Anemometer ball lightning freezing",
     "polygon": [
       {
         "Latitude": -42.8822,
@@ -30,6 +31,7 @@
     "Location": "68°38′N 33°0′W",
     "Latitude": "68.633",
     "Longitude": "-33.0",
+    "Description": "High calm cheyenne condensation leve",
     "polygon": [
       {
         "Latitude": -42.8822,
@@ -55,6 +57,7 @@
     "Location": "66°21′N 38°12′W",
     "Latitude": "66.35",
     "Longitude": "-38.2",
+    "Description": "Arctic air mass ceiling scale cirrostratus",
     "polygon": [
       {
         "Latitude": -42.8822,
@@ -80,6 +83,7 @@
     "Location": "69°10′N 49°50′W",
     "Latitude": "69.16",
     "Longitude": "-49.83",
+    "Description": "Air mass centrifugal surface cut-off",
     "polygon": [
       {
         "Latitude": -42.8822,
@@ -105,6 +109,7 @@
     "Location": "80°45′N 60°45′W",
     "Latitude": "80.75",
     "Longitude": "-60.75",
+    "Description": "Density altitude ground fog hail",
     "polygon": [
       {
         "Latitude": -42.8822,
