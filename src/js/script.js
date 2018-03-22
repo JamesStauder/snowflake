@@ -64,18 +64,14 @@ $(function () {
   		log('Terminus Position: '+$('.terminusPositionSlider').val());
   		log('Ice Rheology: '+$('.iceRheologySlider').val());
   		log('Climate Change: '+$('.climateChangeValue:checked').val());
-  		
   		log('Timespan: '+$('.timespanSlider').val());
   		log('Selected ID: '+$('.selectedID').val());
-  		
   		log('Starting AJAX');
 
   		surface($('.selectedID').val());
 
   		chartSlider = $("#chartSlider").slider({'max':$('.timespanSlider').val()});
-  		
-	    // chartSlider.slider('setAttribute', );  
-	    chartSlider.slider('setValue', 0);  
+  	    chartSlider.slider('setValue', 0);  
 	    $('#chartValue').val(0);
 
   		$('.chart-data').removeClass('d-none');
@@ -271,7 +267,9 @@ function project(latLng) {
 	    TILE_SIZE * (0.5 + latLng.lng() / 360),
 	    TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
 }      
-      
+    
+var svg, g;
+
 function surface(glacier){
 	// log('Building Surface Chart');
 
@@ -281,14 +279,14 @@ function surface(glacier){
 		return;
 	}
 
-	d3.select("svg.surface g").remove();
+	// d3.select("svg.surface g").remove();
 	// d3.select("svg.surface path").remove();
 	// svg.selectAll("*").remove();
-	var svg = d3.select("svg.surface"),
-	    margin = {top: 20, right: 20, bottom: 30, left: 50},
-	    width = +svg.attr("width") - margin.left - margin.right,
-	    height = +svg.attr("height") - margin.top - margin.bottom,
-	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	svg = d3.select("svg.surface"),
+    margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
 	// d3.forceY([-1000,1000]);
 	// d3.forceX([1000,0]);
@@ -396,39 +394,45 @@ function surface(glacier){
 	  	surface_data.push(map_data);
 	  });
 
-	  g.append("path")
-	      .datum(bed_data)
-	      .attr("fill", "none")
-	      .attr("stroke", "steelblue")
-	      .attr("stroke-linejoin", "round")
-	      .attr("stroke-linecap", "round")
-	      .attr("stroke-width", 2.0)
-	      .attr("d", line);
+	  // g.append("path")
+	  //     .datum(bed_data)
+	  //     .attr("fill", "none")
+	  //     .attr("stroke", "steelblue")
+	  //     .attr("stroke-linejoin", "round")
+	  //     .attr("stroke-linecap", "round")
+	  //     .attr("stroke-width", 2.0)
+	  //     .attr("d", line);
 
 	  // log($('#chartValue').val());
 
-	  g.append("path")
-	      .datum(surface_data)
-	      .attr("fill", "none")
-	      .attr("stroke", "steelblue")
-	      .attr("stroke-linejoin", "round")
-	      .attr("stroke-linecap", "round")
-	      .attr("stroke-width", 2.0)
-	      .attr("d", line2);  
+	  // g.append("path")
+	  //     .datum(surface_data)
+	  //     .attr("fill", "none")
+	  //     .attr("stroke", "steelblue")
+	  //     .attr("stroke-linejoin", "round")
+	  //     .attr("stroke-linecap", "round")
+	  //     .attr("stroke-width", 2.0)
+	  //     .attr("d", line2);  
+
+	 d3.select("#glacier-area").remove();
+	
 
 	  // add the area
       g.append("path")
        .datum(surface_data)
        // .datum(data.surface[$('#chartValue').val()])
        .attr("class", "area")
+       .attr("id","glacier-area")
        .attr("fill", "url(#glacier)")
        .attr("d", area);     
 
+     d3.select("#bedrock-area").remove();
 
 	  // // add the area
       g.append("path")
        .datum(bed_data)
        .attr("class", "area")
+       .attr("id","bedrock-area")
        .attr("fill", "url(#bedrock)")
        .attr("d", area2);
 
