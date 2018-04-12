@@ -201,6 +201,7 @@ function initMap() {
 			    var marker = new google.maps.Marker({
 			        position:   latLng,
 			        map:        map,
+			        zIndex: 1000,
 			       //  icon: {
 				      //   anchor: new google.maps.Point(30, 30.26),
 				      //   size: new google.maps.Size(151,151),
@@ -236,7 +237,8 @@ function initMap() {
 					var coordInfoWindow = new google.maps.InfoWindow();
 					coordInfoWindow.setContent(createInfoWindowContent(latLng, this.title, this.description ));
 					coordInfoWindow.setPosition(latLng);
-					coordInfoWindow.open(map);
+					coordInfoWindow.setZIndex(-1);
+					coordInfoWindow.open(map, this);
 
 					coordInfoWindows.push(coordInfoWindow);
 
