@@ -3,7 +3,7 @@ var TILE_SIZE = 256;
 
 // https://stackoverflow.com/questions/8663246/javascript-timer-loop
 
-setInterval(tickFunction, 500);
+setInterval(tickFunction, 100);
 
 function tickFunction( )
 {
@@ -12,7 +12,7 @@ function tickFunction( )
   if('playing' == status){
   	// log('tick');
   	// https://stackoverflow.com/questions/33474379/dynamically-set-value-of-bootstrap-slider
-  	var newValue = parseInt($('.chartSlider').val())+5;
+  	var newValue = parseInt($('.chartSlider').val())+1;
 
   	if( newValue > $('.timespanSlider').val() ){
   		log('Paused');
