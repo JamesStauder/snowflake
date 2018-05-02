@@ -1,4 +1,4 @@
-var status = 'stopped';
+var status = 'stopped';v
 var TILE_SIZE = 256;
 var svg, g;
 var svg_2, g_2;
@@ -571,7 +571,7 @@ function secondary(glacier){
 	  var area = d3.area()
 	    .x(function(d) { return x(d.x); })
 	    .y0(height)
-	    .y1(function(d) { return y(d.y)*.5; });
+	    .y1(function(d) { return y(d.y)*.2; });
 	    
 	// define the area
 	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
