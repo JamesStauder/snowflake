@@ -1,10 +1,23 @@
 var status = 'stopped';
 var TILE_SIZE = 256;
-var svg, g;
+var svg = Array();
+var g = Array();
 var svg_2, g_2;
+var area,area2;
 var resolution = '100';
 var chart1_data;
 var chart2_data;
+
+var width;
+var height;
+var Min, Max, domain;
+
+
+bed_data = new Array();
+surface_data = new Array();
+
+var x = Array();
+var y = Array();
 
 // https://stackoverflow.com/questions/8663246/javascript-timer-loop
 
@@ -32,8 +45,9 @@ function tickFunction( )
 	chartSlider.slider('setValue', newValue);
 	$('.chartSlider').attr('data-value',newValue);
 	$('.chartSlider').val(newValue);
-    surface($('.selectedID').val());
-	secondary($('.selectedID').val());
+    update_chart($('.selectedID').val(),'chart1');
+	update_chart($('.selectedID').val(),'chart2');
+	
   }
   
 }
@@ -56,8 +70,8 @@ $(function () {
 
 	$(".slider").on("change", function(slideEvt) {
 		if(this.name == 'chartSlider'){
-			surface($('.selectedID').val());
-			secondary($('.selectedID').val());
+			update_chart($('.selectedID').val(),'chart1');
+			update_chart($('.selectedID').val(),'chart2');
 			
 		}
 	}); // end on(change)		
@@ -76,8 +90,8 @@ $(function () {
   		log('Selected ID: '+$('.selectedID').val());
   		log('Starting AJAX');
 
-  		surface($('.selectedID').val());
-		secondary($('.selectedID').val());
+		draw_chart($('.selectedID').val(),'chart1');
+		draw_chart($('.selectedID').val(),'chart2');
 
   		chartSlider = $("#chartSlider").slider({'max':$('.timespanSlider').val()});
   	    chartSlider.slider('setValue', 0);  
@@ -100,8 +114,8 @@ $(function () {
 		$('.chartSlider').val(0);
 		$('#pause').hide();
 		$('#play').show();
-		surface($('.selectedID').val());
-		secondary($('.selectedID').val());
+		update_chart($('.selectedID').val(),'chart1');
+		update_chart($('.selectedID').val(),'chart2');
 	});
 
 	$('#end').on('click', function(){
@@ -113,8 +127,8 @@ $(function () {
 		$('.chartSlider').val($('.timespanSlider').val());
 		$('#pause').hide();
 		$('#play').show();
-		surface($('.selectedID').val());
-		secondary($('.selectedID').val());
+		update_chart($('.selectedID').val(),'chart1');
+		update_chart($('.selectedID').val(),'chart2');
 	});
 
 	$('#play').on('click', function(){
@@ -124,9 +138,9 @@ $(function () {
 		$('#pause').removeClass('d-none');
 		$('#pause').show();
 
-		surface($('.selectedID').val());
-		secondary($('.selectedID').val());
-
+		update_chart($('.selectedID').val(),'chart1');
+		update_chart($('.selectedID').val(),'chart2');
+		
 		// loop to advance slider / redraw chart
 
 	});	
@@ -209,9 +223,9 @@ function initMap() {
 			        title:      data.Label,
 			        ID: data.ID,
 			        description: data.Description,
-				Max: data.Max,
-				Min: data.Min,
-				domain: data.domain
+					Max: data.Max,
+					Min: data.Min,
+					domain: data.domain
 
 			    });
 
@@ -221,6 +235,9 @@ function initMap() {
 			    marker.addListener('click', function() {
 					log('Marker '+this.title+' '+this.ID+' Selected');
 					$('.selectedID').val(this.ID);
+					$('.selectedDomain').val(this.domain);
+					$('.selectedMin').val(this.Min);
+					$('.selectedMax').val(this.Max);
 
 					$.each(markers, function(){
 						// Turn all markers Red
@@ -312,63 +329,54 @@ function project(latLng) {
 }      
     
 
-
-function surface(glacier){
-	// log('Building Surface Chart');
-
-	// Check for invalid Glacier before loading file
-	if( ! Number.isInteger( parseInt(glacier) ) ){
-		log('Invalid Glacier');
-		return;
-	}
-
-	var svg = d3.select("svg.surface");
-    	var margin = {top: 20, right: 20, bottom: 30, left: 50};
-    	var width = +svg.attr("width") - margin.left - margin.right;
-    	var height = +svg.attr("height") - margin.top - margin.bottom;
-    	var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	var Min = -1500;
-	var Max = 2400.0;
-	var domain = 400;
+function draw_chart(glacier,chart){
+	svg[chart] = d3.select("svg."+chart);
 	
-	var x = d3.scaleLinear().rangeRound([0, width]);
-        var y = d3.scaleLinear().rangeRound([height, 0]);
+	if( typeof svg[chart].selectAll === "function" ){
+		// log('Clearing Old Chart');
+		svg[chart].selectAll("*").remove();
+		// d3.select("svg."+chart+" *").remove();
+		// d3.selectAll("svg").remove();
+	}
+	
+	var margin = {top: 20, right: 20, bottom: 30, left: 50};
+	width = +svg[chart].attr("width") - margin.left - margin.right;
+	height = +svg[chart].attr("height") - margin.top - margin.bottom;
+	g[chart] = Array();
+	g[chart]['layer1'] = svg[chart].append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	g[chart]['layer2'] = svg[chart].append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	g[chart]['layer3'] = svg[chart].append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	g[chart]['layer4'] = svg[chart].append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        x.domain([domain,0]);
-        y.domain([Min,Max]);
+	Min = $('.selectedMin').val();
+	Max = $('.selectedMax').val();
+	domain = $('.selectedDomain').val();
+	
+	x[chart] = d3.scaleLinear().rangeRound([0, width]);
+    y[chart] = d3.scaleLinear().rangeRound([height, 0]);
 
-	var sealevel = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(height*(Max/Math.abs(Max - Min)));
+    x[chart].domain([domain,0]);
+    y[chart].domain([Min,Max]);
 
-	var line_x = 0;
-	var line = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(function(d) { return y(d.y); });
-
-	var line2_x = 0;   
-	var line2 = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(function(d) { return y(d.y); });
+	
 
 	// define the area
 	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
 	  var area_x = 0;
-	  var area = d3.area()
-	    .x(function(d) { return x(d.x); })
+	  area = d3.area()
+	    .x(function(d) {return x[chart](d.x); })
 	    .y0(height)
-	    .y1(function(d) { return y(d.y); });
+	    .y1(function(d) { return y[chart](d.y); });
 	    
 	// define the area
 	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
 	  var area2_x = 0;
-	  var area2 = d3.area()
-	    .x(function(d) { return x(d.x); })
+	  area2 = d3.area()
+	    .x(function(d) { return x[chart](d.x); })
 	    .y0(height)
-	    .y1(function(d) { return y(d.y); });        
+	    .y1(function(d) { return y[chart](d.y); });        
 
-	  g.append("defs")
+	  g[chart]['layer2'].append("defs")
 		 .append('pattern')
 		 .attr('id', 'bedrock')
 		 .attr('patternUnits', 'userSpaceOnUse')
@@ -379,7 +387,7 @@ function surface(glacier){
 		 .attr('width', 1024)
 		 .attr('height', 768);
 
-      	  g.select("defs")
+      g[chart]['layer1'].append("defs")
 		 .append('pattern')
 		 .attr('id', 'glacier')
 		 .attr('patternUnits', 'userSpaceOnUse')
@@ -392,39 +400,70 @@ function surface(glacier){
 
           // log(data.Max);
 
-	  g.append("g")
+	  g[chart]['layer3'].append("g")
 	      .attr("transform", "translate(0," + height + ")")
-	      .call(d3.axisBottom(x))
-	    .select(".domain")
-	      .remove();
+	      .call(d3.axisBottom(x[chart]))
+		  .append("text")
+	      .attr("fill", "#000")
+	      .attr("x", width-6)
+		  .attr("y",  - 6)
+	      .attr("text-anchor", "end")
+		  .style("font-size", "22px")
 
+	      .text("Distance (km)")
+	    //.select("svg."+chart+" .domain")
+	    //  .remove();
+		  
+		g[chart]['layer3'].append("g")
+	      .call(d3.axisLeft(y[chart]))
+		  .append("text")
+	      .attr("fill", "#000")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", "0.71em")
+	      .attr("text-anchor", "end")
+		  .style("font-size", "22px")
+	      .text("Elevation (m)");
+		  
+		   
 
+	initial_chart(glacier,chart);
+} // end of draw_chart
+
+function initial_chart(glacier,chart){
+	// log('Building Surface Chart');
+
+	// Check for invalid Glacier before loading file
+	if( ! Number.isInteger( parseInt(glacier) ) ){
+		log('Invalid Glacier');
+		return;
+	}
+	
+		
 	// log("Loading: /assets/"+glacier+"_"+resolution+".json");
 	d3.json("/assets/"+glacier+"_"+resolution+".json", function(error, data) {
 	  if (error) throw error;
-	  chart1_data = data;
-
-	  bed_data = new Array();
-
+	  
+      bed_data[chart] = new Array();
 	  var x_index = 0;
 	  $.each(data.bedrock, function(k, v){
-	  	var map_data = {x: (data.bedrock.length - x_index++)*(data.domain/data.bedrock.length),y: v}
-	  	bed_data.push(map_data);
+	  	var map_data = {x: (data.bedrock.length - ++x_index)*(data.domain/(data.bedrock.length-1)),y: v}
+	  	bed_data[chart].push(map_data);
 	  });
-
-	  surface_data = new Array();
-
-	  var x_index = 0;
-	  $.each(data.chart1[$('#chartValue').val()], function(k, v){
-	  	if(x_index % (data.chart1[$('#chartValue').val()].length/resolution) != 0){
-			x_index++;
+	  
+	  surface_data[chart] = new Array();
+      // console.log(data[chart][$('#chartValue').val()])
+	  x_index = 0;
+	  x2_index = 0;
+	  $.each(data[chart][$('#chartValue').val()], function(k, v){
+	  	if(x_index++ % (data[chart][$('#chartValue').val()].length/resolution) != 0){
 			return;
 		}
-		var map_data = {x: (data.chart1[$('#chartValue').val()].length-x_index++)*(data.domain/data.chart1[$('#chartValue').val()].length),y: v}
-	  	surface_data.push(map_data);
+		var map_data = {x: (data.bedrock.length - ++x2_index)*(data.domain/(data.bedrock.length-1)),y: v}
+	  	surface_data[chart].push(map_data);
 	  });
-
-	
+	  
+	  
 	  // g.append("path")
 	  //     .datum(bed_data)
 	  //     .attr("fill", "none")
@@ -445,30 +484,30 @@ function surface(glacier){
 	  //     .attr("stroke-width", 2.0)
 	  //     .attr("d", line2);  
 
-	 d3.select("#glacier-area").remove();
+	 d3.select("svg."+chart+" #glacier-area").remove();
 	
-
+	  // console.log(surface_data[chart])
 	  // add the area
-      g.append("path")
-       .datum(surface_data)
+      g[chart]['layer1'].append("path")
+       .datum(surface_data[chart])
        // .datum(data.surface[$('#chartValue').val()])
        .attr("class", "area")
        .attr("id","glacier-area")
        .attr("fill", "url(#glacier)")
        .attr("d", area);     
 
-     d3.select("#bedrock-area").remove();
-
+     // d3.select("svg."+chart+" bedrock-area").remove();
+		// console.log(bed_data[chart])
 	  // // add the area
-      g.append("path")
-       .datum(bed_data)
+      g[chart]['layer2'].append("path")
+       .datum(bed_data[chart])
        .attr("class", "area")
        .attr("id","bedrock-area")
        .attr("fill", "url(#bedrock)")
        .attr("d", area2);
 
-    g.append("path")
-	      .datum(bed_data)
+		/* g[chart]['layer2'].append("path")
+	      .datum(bed_data[chart])
 	      .attr("fill", "none")
 	      .attr("id","sealevel")
 	      .attr("stroke", "deepskyblue")
@@ -476,6 +515,101 @@ function surface(glacier){
 	      .attr("stroke-linecap", "round")
 	      .attr("stroke-width", 2.0)
 	      .attr("d", sealevel);   
+		*/
+		
+		var sealevel = d3.line()
+	    .x(function(d) { return x[chart](d.x); })
+	    .y(height*(Max/Math.abs(Max - Min)));
+
+		
+		g[chart]['layer4'].append("path")
+	      .datum(bed_data[chart])
+	      .attr("fill", "none")
+	      .attr("id","sealevel")
+	      .attr("stroke", "deepskyblue")
+	      .attr("stroke-linejoin", "round")
+	      .attr("stroke-linecap", "round")
+	      .attr("stroke-width", 2.0)
+	      .attr("d", sealevel);
+		
+	}); // end tsv load 
+}
+
+function update_chart(glacier,chart){
+	// log('Building Surface Chart');
+
+	// Check for invalid Glacier before loading file
+	if( ! Number.isInteger( parseInt(glacier) ) ){
+		log('Invalid Glacier');
+		return;
+	}
+	
+	// log("Loading: /assets/"+glacier+"_"+resolution+".json");
+	d3.json("/assets/"+glacier+"_"+resolution+".json", function(error, data) {
+	  if (error) throw error;
+	  
+      bed_data[chart] = new Array();
+	  var x_index = 0;
+	  $.each(data.bedrock, function(k, v){
+	  	var map_data = {x: (data.bedrock.length - x_index++)*(data.domain/data.bedrock.length),y: v}
+	  	bed_data[chart].push(map_data);
+	  });
+
+	  surface_data[chart] = new Array();
+
+	  x_index = 0;
+	  x2_index = 0;
+	  $.each(data[chart][$('#chartValue').val()], function(k, v){
+	  	if(x_index++ % (data[chart][$('#chartValue').val()].length/resolution) != 0){
+			return;
+		}
+		var map_data = {x: (data.bedrock.length - ++x2_index)*(data.domain/(data.bedrock.length-1)),y: v}
+	  	surface_data[chart].push(map_data);
+	  });
+	  
+	  // g.append("path")
+	  //     .datum(bed_data)
+	  //     .attr("fill", "none")
+	  //     .attr("stroke", "steelblue")
+	  //     .attr("stroke-linejoin", "round")
+	  //     .attr("stroke-linecap", "round")
+	  //     .attr("stroke-width", 2.0)
+	  //     .attr("d", line);
+
+	  // log($('#chartValue').val());
+
+	  // g.append("path")
+	  //     .datum(surface_data)
+	  //     .attr("fill", "none")
+	  //     .attr("stroke", "steelblue")
+	  //     .attr("stroke-linejoin", "round")
+	  //     .attr("stroke-linecap", "round")
+	  //     .attr("stroke-width", 2.0)
+	  //     .attr("d", line2);  
+
+	 d3.select("svg."+chart+" #glacier-area").remove();
+	
+	  // add the area
+      g[chart]['layer1'].append("path")
+       .datum(surface_data[chart])
+       // .datum(data.surface[$('#chartValue').val()])
+       .attr("class", "area")
+       .attr("id","glacier-area")
+       .attr("fill", "url(#glacier)")
+       .attr("d", area);     
+
+	   /*
+     d3.select("svg."+chart+" bedrock-area").remove();
+
+	  // // add the area
+      g[chart].append("path")
+       .datum(bed_data[chart])
+       .attr("class", "area")
+       .attr("id","bedrock-area")
+       .attr("fill", "url(#bedrock)")
+       .attr("d", area2);
+	   */
+  
 
 /*	g.append("g")
 	      .call(d3.axisLeft(y))
@@ -488,220 +622,16 @@ function surface(glacier){
 	      .text("Sealevel  >");
 */
 
-
-	  g.append("g")
-	      .call(d3.axisLeft(y))
-	    .append("text")
-	      .attr("fill", "#000")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", "0.71em")
-	      .attr("text-anchor", "end")
-	      .text("Elevation (m)");
-
-
-
-	}); // end tsv load 
-}
-
-
-function secondary(glacier){
-	// log('Building Surface Chart');
-
-	// Check for invalid Glacier before loading file
-	if( ! Number.isInteger( parseInt(glacier) ) ){
-		log('Invalid Glacier');
-		return;
-	}
-
-	// d3.select("svg.surface g").remove();
-	// d3.select("svg.surface path").remove();
-	// svg.selectAll("*").remove();
-	var svg_2 = d3.select("svg.secondary");
-    var margin = {top: 20, right: 20, bottom: 30, left: 50};
-    var width = +svg_2.attr("width") - margin.left - margin.right;
-    var height = +svg_2.attr("height") - margin.top - margin.bottom;
-    var g_2 = svg_2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	var Min = -1500;
-	var Max = 2400.0;
-	var domain = 400;
-	
-	var x = d3.scaleLinear().rangeRound([0, width]);
-        var y = d3.scaleLinear().rangeRound([height, 0]);
-
-        x.domain([domain,0]);
-        y.domain([Min,Max]);
-
-	var sealevel = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(height*(Max/Math.abs(Max - Min)));
-
-
-	var line_x = 0;
-	var line = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(function(d) { return y(d.y); });
-	    //.y(function(d) { return y(d); });
-
-	var line2_x = 0;   
-	var line2 = d3.line()
-	    .x(function(d) { return x(d.x); })
-	    .y(function(d) { return y(d.y); });
-
-	// define the area
-	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
-	  var area_x = 0;
-	  var area = d3.area()
-	    .x(function(d) { return x(d.x); })
-	    .y0(height)
-	    .y1(function(d) { return y(d.y)*.5; });
-	    
-	// define the area
-	  // https://bl.ocks.org/d3noob/119a138ef9bd1d8f0a8d57ea72355252
-	  var area2_x = 0;
-	  var area2 = d3.area()
-	    .x(function(d) { return x(d.x); })
-	    .y0(height)
-	    .y1(function(d) { return y(d.y); });        
-
-	// log("/assets/"+glacier+".json");
-	//d3.json("/assets/"+glacier+".json", function(error, data) {
-	d3.json("/assets/"+glacier+"_"+resolution+".json", function(error, data) {
-
-	  if (error) throw error;
-
-	  // console.log(data.bed);
-	  // console.log(d3.extent(data.bed, function(d) { console.log(d); return +d; }));
-	  // d = data.bed;
-
-	  bed_data = new Array();
-
-	  var x_index = 0;
-	  $.each(data.bedrock, function(k, v){
-	  	var map_data = {x: (data.bedrock.length - x_index++)*(data.domain/data.bedrock.length),y: v}
-	  	bed_data.push(map_data);
-	  });
-
-	  surface_data = new Array();
-
-	  var x_index = 0;
-	  $.each(data.chart2[$('#chartValue').val()], function(k, v){
-	  	if(x_index % (data.chart2[$('#chartValue').val()].length/resolution) != 0){
-			x_index++;
-			return;
-		}
-		var map_data = {x: (data.chart2[$('#chartValue').val()].length-x_index++)*(data.domain/data.chart2[$('#chartValue').val()].length),y: v}
-	  	surface_data.push(map_data);
-	  });
+		
 	  
-	  g_2.append("defs")
-		 .append('pattern')
-		 .attr('id', 'bedrock')
-		 .attr('patternUnits', 'userSpaceOnUse')
-		 .attr('width', 2048)
-		 .attr('height', 1536)
-		 .append("image")
-		 .attr("xlink:href", "./assets/pattern_of_stone_texture.jpg")
-		 .attr('width', 1024)
-		 .attr('height', 768);
-
-      	   g_2.select("defs")
-		 .append('pattern')
-		 .attr('id', 'glacier')
-		 .attr('patternUnits', 'userSpaceOnUse')
-		 .attr('width', 2048)
-		 .attr('height', 1536)
-		 .append("image")
-		 .attr("xlink:href", "./assets/pattern_of_snow_texture.jpg")
-		 .attr('width', 1024)
-		 .attr('height', 768);
-
-	  g_2.append("g")
-	      .attr("transform", "translate(0," + height + ")")
-	      .call(d3.axisBottom(x))
-	      .select(".domain")
-	      .remove();
-
-
-	  // g.append("path")
-	  //     .datum(bed_data)
-	  //     .attr("fill", "none")
-	  //     .attr("stroke", "steelblue")
-	  //     .attr("stroke-linejoin", "round")
-	  //     .attr("stroke-linecap", "round")
-	  //     .attr("stroke-width", 2.0)
-	  //     .attr("d", line);
-
-	  // log($('#chartValue').val());
-
-	  // g.append("path")
-	  //     .datum(surface_data)
-	  //     .attr("fill", "none")
-	  //     .attr("stroke", "steelblue")
-	  //     .attr("stroke-linejoin", "round")
-	  //     .attr("stroke-linecap", "round")
-	  //     .attr("stroke-width", 2.0)
-	  //     .attr("d", line2);  
-
-	 d3.select("#glacier-area_2").remove();
-	
-
-	  // add the area
-      g_2.append("path")
-       .datum(surface_data)
-       // .datum(data.surface[$('#chartValue').val()])
-       .attr("class", "area")
-       .attr("id","glacier-area_2")
-       .attr("fill", "url(#glacier)")
-       .attr("d", area);     
-
-     d3.select("#bedrock-area_2").remove();
-
-	  // // add the area
-      g_2.append("path")
-       .datum(bed_data)
-       .attr("class", "area")
-       .attr("id","bedrock-area_2")
-       .attr("fill", "url(#bedrock)")
-       .attr("d", area2);
-
-    g_2.append("path")
-	      .datum(bed_data)
-	      .attr("fill", "none")
-	      .attr("id","sealevel")
-	      .attr("stroke", "deepskyblue")
-	      .attr("stroke-linejoin", "round")
-	      .attr("stroke-linecap", "round")
-	      .attr("stroke-width", 2.0)
-	      .attr("d", sealevel);   
-
-/*
-	g_2.append("g")
-	      .call(d3.axisLeft(y))
-	    .append("text")
-	      .attr("fill", "#000")
-	      // .attr("transform", "rotate(-90)")
-	      .attr("y", 110)
-	      .attr("dy", "0.71em")
-	      .attr("text-anchor", "end")
-	      .text("Sealevel  |");
-*/
-
-	  g.append("g")
-	      .call(d3.axisLeft(y))
-	    .append("text")
-	      .attr("fill", "#000")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", "0.71em")
-	      .attr("text-anchor", "end")
-	      .text("Elevation (m)");
 
 
 
 	}); // end tsv load 
 }
+
+
+
 
 
     

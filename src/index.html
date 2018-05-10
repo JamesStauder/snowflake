@@ -258,6 +258,9 @@
                     <div class="col-12">
                         <div class="text-center">
                             <input type="hidden" name="selectedID" id="selectedID" class="selectedID" value="" />
+                            <input type="hidden" name="selectedDomain" id="selectedDomain" class="selectedDomain" value="" />
+                            <input type="hidden" name="selectedMin" id="selectedMin" class="selectedMin" value="" />
+                            <input type="hidden" name="selectedMax" id="selectedMax" class="selectedMax" value="" />
                             <input type="button" class="btn btn-primary" id="generate" name="generate" value="Generate Charts">
                         </div>
                     </div>
@@ -285,7 +288,7 @@
         <div class="col-12">
             <h2 class="">Unperturbed Chart Data</h2>
             <div class="text-center">
-                <svg class="chart surface" width="1000" height="300" viewBox="0 0 1000 300"
+                <svg class="chart chart1" width="1000" height="300" viewBox="0 0 1000 300"
       preserveAspectRatio="xMinYMin meet"></svg>
             </div>
             
@@ -294,7 +297,7 @@
 		<div class="col-12">
             <h2 class="">Perturbed Chart Data</h2>
             <div class="text-center">
-                <svg class="chart secondary" width="1000" height="300" viewBox="0 0 1000 300"
+                <svg class="chart chart2" width="1000" height="300" viewBox="0 0 1000 300"
       preserveAspectRatio="xMinYMin meet"></svg>
             </div>
             
