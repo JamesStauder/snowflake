@@ -2,6 +2,9 @@ var status = 'stopped';
 var TILE_SIZE = 256;
 var svg, g;
 var svg_2, g_2;
+var resolution = '100';
+var chart1_data;
+var chart2_data;
 
 // https://stackoverflow.com/questions/8663246/javascript-timer-loop
 
@@ -157,26 +160,10 @@ var markers = new Array();
 var coordInfoWindows = new Array();
 
 function createInfoWindowContent(latLng, title, description) {
-        // var scale = 1 << zoom;
-
-        // var worldCoordinate = project(latLng);
-
-        // var pixelCoordinate = new google.maps.Point(
-        //     Math.floor(worldCoordinate.x * scale),
-        //     Math.floor(worldCoordinate.y * scale));
-
-        // var tileCoordinate = new google.maps.Point(
-        //     Math.floor(worldCoordinate.x * scale / TILE_SIZE),
-        //     Math.floor(worldCoordinate.y * scale / TILE_SIZE));
-
         return [
           title,
           description,
-          'LatLng: ' + latLng,
-          //'Zoom level: ' + zoom,
-          // 'World Coordinate: ' + worldCoordinate,
-          // 'Pixel Coordinate: ' + pixelCoordinate,
-          // 'Tile Coordinate: ' + tileCoordinate
+          'LatLng: ' + latLng
         ].join('<br>');
       }
 
@@ -221,7 +208,11 @@ function initMap() {
 				    icon: 'http://maps.google.com/mapfiles/ms/micons/red-pushpin.png',
 			        title:      data.Label,
 			        ID: data.ID,
-			        description: data.Description
+			        description: data.Description,
+				Max: data.Max,
+				Min: data.Min,
+				domain: data.domain
+
 			    });
 
 			    markers.push(marker);
@@ -331,40 +322,30 @@ function surface(glacier){
 		return;
 	}
 
-	// d3.select("svg.surface g").remove();
-	// d3.select("svg.surface path").remove();
-	// svg.selectAll("*").remove();
 	var svg = d3.select("svg.surface");
-    var margin = {top: 20, right: 20, bottom: 30, left: 50};
-    var width = +svg.attr("width") - margin.left - margin.right;
-    var height = +svg.attr("height") - margin.top - margin.bottom;
-    var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	// d3.forceY([-1000,1000]);
-	// d3.forceX([1000,0]);
-	
-	var x = d3.scaleLinear()
-	    .rangeRound([0, width]);
+    	var margin = {top: 20, right: 20, bottom: 30, left: 50};
+    	var width = +svg.attr("width") - margin.left - margin.right;
+    	var height = +svg.attr("height") - margin.top - margin.bottom;
+    	var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var y = d3.scaleLinear()
-	    .rangeRound([height, 0]);
+	var Min = -1500;
+	var Max = 2400.0;
+	var domain = 400;
+	
+	var x = d3.scaleLinear().rangeRound([0, width]);
+        var y = d3.scaleLinear().rangeRound([height, 0]);
 
-	// x.domain(d3.extent(data.bed, function(d) { return +d; }));
-	//y = d3.scale.linear().range([0,width]);
-	x.domain([100,0]);
-	y.domain([-2000,2000]);
+        x.domain([domain,0]);
+        y.domain([Min,Max]);
 
 	var sealevel = d3.line()
 	    .x(function(d) { return x(d.x); })
-	    .y(122);
-	    //.y(function(d) { return y(d); });
-
+	    .y(height*(Max/Math.abs(Max - Min)));
 
 	var line_x = 0;
 	var line = d3.line()
 	    .x(function(d) { return x(d.x); })
 	    .y(function(d) { return y(d.y); });
-	    //.y(function(d) { return y(d); });
 
 	var line2_x = 0;   
 	var line2 = d3.line()
@@ -387,15 +368,6 @@ function surface(glacier){
 	    .y0(height)
 	    .y1(function(d) { return y(d.y); });        
 
-	// log("/assets/"+glacier+".json");
-	d3.json("/assets/"+glacier+".json", function(error, data) {
-	  if (error) throw error;
-
-	  // console.log(data.bed);
-	  // console.log(d3.extent(data.bed, function(d) { console.log(d); return +d; }));
-	  // d = data.bed;
-
-	  
 	  g.append("defs")
 		 .append('pattern')
 		 .attr('id', 'bedrock')
@@ -407,7 +379,7 @@ function surface(glacier){
 		 .attr('width', 1024)
 		 .attr('height', 768);
 
-      g.select("defs")
+      	  g.select("defs")
 		 .append('pattern')
 		 .attr('id', 'glacier')
 		 .attr('patternUnits', 'userSpaceOnUse')
@@ -418,38 +390,41 @@ function surface(glacier){
 		 .attr('width', 1024)
 		 .attr('height', 768);
 
+          // log(data.Max);
+
 	  g.append("g")
 	      .attr("transform", "translate(0," + height + ")")
 	      .call(d3.axisBottom(x))
 	    .select(".domain")
 	      .remove();
 
-	  g.append("g")
-	      .call(d3.axisLeft(y))
-	    .append("text")
-	      .attr("fill", "#000")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", "0.71em")
-	      .attr("text-anchor", "end")
-	      .text("Elevation (m)");
+
+	// log("Loading: /assets/"+glacier+"_"+resolution+".json");
+	d3.json("/assets/"+glacier+"_"+resolution+".json", function(error, data) {
+	  if (error) throw error;
+	  chart1_data = data;
 
 	  bed_data = new Array();
 
 	  var x_index = 0;
-	  $.each(data.bed, function(k, v){
-	  	var map_data = {x: 100-(x_index++)*(100/data.bed.length),y: v}
+	  $.each(data.bedrock, function(k, v){
+	  	var map_data = {x: (data.bedrock.length - x_index++)*(data.domain/data.bedrock.length),y: v}
 	  	bed_data.push(map_data);
 	  });
 
 	  surface_data = new Array();
 
 	  var x_index = 0;
-	  $.each(data.surface[$('#chartValue').val()], function(k, v){
-	  	var map_data = {x: 100-(x_index++)*(100/data.bed.length),y: v}
+	  $.each(data.chart1[$('#chartValue').val()], function(k, v){
+	  	if(x_index % (data.chart1[$('#chartValue').val()].length/resolution) != 0){
+			x_index++;
+			return;
+		}
+		var map_data = {x: (data.chart1[$('#chartValue').val()].length-x_index++)*(data.domain/data.chart1[$('#chartValue').val()].length),y: v}
 	  	surface_data.push(map_data);
 	  });
 
+	
 	  // g.append("path")
 	  //     .datum(bed_data)
 	  //     .attr("fill", "none")
@@ -502,7 +477,7 @@ function surface(glacier){
 	      .attr("stroke-width", 2.0)
 	      .attr("d", sealevel);   
 
-	g.append("g")
+/*	g.append("g")
 	      .call(d3.axisLeft(y))
 	    .append("text")
 	      .attr("fill", "#000")
@@ -510,7 +485,21 @@ function surface(glacier){
 	      .attr("y", 110)
 	      .attr("dy", "0.71em")
 	      .attr("text-anchor", "end")
-	      .text("Sealevel  |");
+	      .text("Sealevel  >");
+*/
+
+
+	  g.append("g")
+	      .call(d3.axisLeft(y))
+	    .append("text")
+	      .attr("fill", "#000")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", "0.71em")
+	      .attr("text-anchor", "end")
+	      .text("Elevation (m)");
+
+
 
 	}); // end tsv load 
 }
@@ -534,24 +523,19 @@ function secondary(glacier){
     var height = +svg_2.attr("height") - margin.top - margin.bottom;
     var g_2 = svg_2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
-	// d3.forceY([-1000,1000]);
-	// d3.forceX([1000,0]);
+	var Min = -1500;
+	var Max = 2400.0;
+	var domain = 400;
 	
-	var x = d3.scaleLinear()
-	    .rangeRound([0, width]);
+	var x = d3.scaleLinear().rangeRound([0, width]);
+        var y = d3.scaleLinear().rangeRound([height, 0]);
 
-	var y = d3.scaleLinear()
-	    .rangeRound([height, 0]);
-
-	// x.domain(d3.extent(data.bed, function(d) { return +d; }));
-	//y = d3.scale.linear().range([0,width]);
-	x.domain([100,0]);
-	y.domain([-2000,2000]);
+        x.domain([domain,0]);
+        y.domain([Min,Max]);
 
 	var sealevel = d3.line()
 	    .x(function(d) { return x(d.x); })
-	    .y(122);
-	    //.y(function(d) { return y(d); });
+	    .y(height*(Max/Math.abs(Max - Min)));
 
 
 	var line_x = 0;
@@ -582,13 +566,34 @@ function secondary(glacier){
 	    .y1(function(d) { return y(d.y); });        
 
 	// log("/assets/"+glacier+".json");
-	d3.json("/assets/"+glacier+".json", function(error, data) {
+	//d3.json("/assets/"+glacier+".json", function(error, data) {
+	d3.json("/assets/"+glacier+"_"+resolution+".json", function(error, data) {
+
 	  if (error) throw error;
 
 	  // console.log(data.bed);
 	  // console.log(d3.extent(data.bed, function(d) { console.log(d); return +d; }));
 	  // d = data.bed;
 
+	  bed_data = new Array();
+
+	  var x_index = 0;
+	  $.each(data.bedrock, function(k, v){
+	  	var map_data = {x: (data.bedrock.length - x_index++)*(data.domain/data.bedrock.length),y: v}
+	  	bed_data.push(map_data);
+	  });
+
+	  surface_data = new Array();
+
+	  var x_index = 0;
+	  $.each(data.chart2[$('#chartValue').val()], function(k, v){
+	  	if(x_index % (data.chart2[$('#chartValue').val()].length/resolution) != 0){
+			x_index++;
+			return;
+		}
+		var map_data = {x: (data.chart2[$('#chartValue').val()].length-x_index++)*(data.domain/data.chart2[$('#chartValue').val()].length),y: v}
+	  	surface_data.push(map_data);
+	  });
 	  
 	  g_2.append("defs")
 		 .append('pattern')
@@ -601,7 +606,7 @@ function secondary(glacier){
 		 .attr('width', 1024)
 		 .attr('height', 768);
 
-      g_2.select("defs")
+      	   g_2.select("defs")
 		 .append('pattern')
 		 .attr('id', 'glacier')
 		 .attr('patternUnits', 'userSpaceOnUse')
@@ -615,34 +620,9 @@ function secondary(glacier){
 	  g_2.append("g")
 	      .attr("transform", "translate(0," + height + ")")
 	      .call(d3.axisBottom(x))
-	    .select(".domain")
+	      .select(".domain")
 	      .remove();
 
-	  g_2.append("g")
-	      .call(d3.axisLeft(y))
-	    .append("text")
-	      .attr("fill", "#000")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", "0.71em")
-	      .attr("text-anchor", "end")
-	      .text("Elevation (m)");
-
-	  var bed_data = new Array();
-
-	  var x_index = 0;
-	  $.each(data.bed, function(k, v){
-	  	var map_data = {x: 100-(x_index++)*(100/data.bed.length),y: v}
-	  	bed_data.push(map_data);
-	  });
-
-	  var surface_data = new Array();
-
-	  var x_index = 0;
-	  $.each(data.surface[$('#chartValue').val()], function(k, v){
-	  	var map_data = {x: 100-(x_index++)*(100/data.bed.length),y: v}
-	  	surface_data.push(map_data);
-	  });
 
 	  // g.append("path")
 	  //     .datum(bed_data)
@@ -696,6 +676,7 @@ function secondary(glacier){
 	      .attr("stroke-width", 2.0)
 	      .attr("d", sealevel);   
 
+/*
 	g_2.append("g")
 	      .call(d3.axisLeft(y))
 	    .append("text")
@@ -705,6 +686,19 @@ function secondary(glacier){
 	      .attr("dy", "0.71em")
 	      .attr("text-anchor", "end")
 	      .text("Sealevel  |");
+*/
+
+	  g.append("g")
+	      .call(d3.axisLeft(y))
+	    .append("text")
+	      .attr("fill", "#000")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", "0.71em")
+	      .attr("text-anchor", "end")
+	      .text("Elevation (m)");
+
+
 
 	}); // end tsv load 
 }
