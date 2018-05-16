@@ -33,7 +33,7 @@ function tickFunction( )
   	var newValue = parseInt($('.chartSlider').val())+1;
 
   	if( newValue > $('.timespanSlider').val() ){
-  		log('Paused');
+  		//log('Paused');
   		status = 'stopped';
 		$('#pause').hide();
 		$('#play').show();
@@ -54,7 +54,7 @@ function tickFunction( )
 
 $(function () {
 
-	log('Starting....');
+	//log('Starting....');
 
   	$('[data-toggle="tooltip"]').tooltip();
   	$('[data-toggle="popover"]').popover();
@@ -81,14 +81,14 @@ $(function () {
 			log('Please Select a Glacier');
 			return;
 		}
-  		log('Generating Chart');
-  		log('Basal Lubrication: '+$('.basalLubricationSlider').val());
-  		log('Terminus Position: '+$('.terminusPositionSlider').val());
-  		log('Ice Rheology: '+$('.iceRheologySlider').val());
-  		log('Climate Change: '+$('.climateChangeValue:checked').val());
-  		log('Timespan: '+$('.timespanSlider').val());
-  		log('Selected ID: '+$('.selectedID').val());
-  		log('Starting AJAX');
+  		//log('Generating Chart');
+  		//log('Basal Lubrication: '+$('.basalLubricationSlider').val());
+  		//log('Terminus Position: '+$('.terminusPositionSlider').val());
+  		//log('Ice Rheology: '+$('.iceRheologySlider').val());
+  		//log('Climate Change: '+$('.climateChangeValue:checked').val());
+  		//log('Timespan: '+$('.timespanSlider').val());
+  		//log('Selected ID: '+$('.selectedID').val());
+  		//log('Starting AJAX');
 
 		draw_chart($('.selectedID').val(),'chart1');
 		draw_chart($('.selectedID').val(),'chart2');
@@ -106,7 +106,7 @@ $(function () {
   	});
 
 	$('#beginning').on('click', function(){
-		log('Returning to Beginning');
+		//log('Returning to Beginning');
 		status = 'stopped';
 		$('#chartValue').val(0);
 		chartSlider.slider('setValue', 0);
@@ -119,7 +119,7 @@ $(function () {
 	});
 
 	$('#end').on('click', function(){
-		log('Advancing to End');
+		//log('Advancing to End');
 		status = 'stopped';
 		$('#chartValue').val($('.timespanSlider').val());
 		chartSlider.slider('setValue', $('.timespanSlider').val());
@@ -132,7 +132,7 @@ $(function () {
 	});
 
 	$('#play').on('click', function(){
-		log('Playing');
+		//log('Playing');
 		status = 'playing';
 		$('#play').hide();
 		$('#pause').removeClass('d-none');
@@ -146,7 +146,7 @@ $(function () {
 	});	
 
 	$('#pause').on('click', function(){
-		log('Paused');
+		//log('Paused');
 		status = 'stopped';
 		$('#pause').hide();
 		$('#play').show();
@@ -155,12 +155,14 @@ $(function () {
 
 }) // end function
 
-function log(message){
-	value = $('textarea#console').val() + Date() + ' ' + message + "\n";
-	$('textarea#console').val(value);
-	var elem = document.getElementById('console');
-  	elem.scrollTop = elem.scrollHeight;	
-}
+
+//function log(message){
+//	value = $('textarea#console').val() + Date() + ' ' + message + "\n";
+//	$('textarea#console').val(value);
+//	var elem = document.getElementById('console');
+//	elem.scrollTop = elem.scrollHeight;	
+//}
+
 
 var TILE_URL = 'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg';
 // TILE_URL = 'http://via.placeholder.com/256?text=Zoom:+{z}+X:+{x}+Y:+{y}'
@@ -202,11 +204,11 @@ function initMap() {
 
 			$.each(json_data, function(key, data) {
 
-				log(data.Label);
+				//log(data.Label);
 
 			    var latLng = new google.maps.LatLng(data.Latitude, data.Longitude);
 
-			    log(data.description);
+			    //log(data.description);
 
 			    var marker = new google.maps.Marker({
 			        position:   latLng,
@@ -233,7 +235,7 @@ function initMap() {
 
 
 			    marker.addListener('click', function() {
-					log('Marker '+this.title+' '+this.ID+' Selected');
+					//log('Marker '+this.title+' '+this.ID+' Selected');
 					$('.selectedID').val(this.ID);
 					$('.selectedDomain').val(this.domain);
 					$('.selectedMin').val(this.Min);
@@ -435,7 +437,7 @@ function initial_chart(glacier,chart){
 
 	// Check for invalid Glacier before loading file
 	if( ! Number.isInteger( parseInt(glacier) ) ){
-		log('Invalid Glacier');
+		//log('Invalid Glacier');
 		return;
 	}
 	
@@ -540,7 +542,7 @@ function update_chart(glacier,chart){
 
 	// Check for invalid Glacier before loading file
 	if( ! Number.isInteger( parseInt(glacier) ) ){
-		log('Invalid Glacier');
+		//log('Invalid Glacier');
 		return;
 	}
 	
