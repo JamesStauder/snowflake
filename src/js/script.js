@@ -19,13 +19,11 @@ surface_data = new Array();
 var x = Array();
 var y = Array();
 
-// https://stackoverflow.com/questions/8663246/javascript-timer-loop
 
 setInterval(tickFunction, 100);
-
 function tickFunction( )
 {
-  //this will repeat every 5 seconds
+  //this will repeat every 1 second
   //you can reset counter here
   if('playing' == status){
   	// log('tick');
@@ -45,7 +43,7 @@ function tickFunction( )
 	chartSlider.slider('setValue', newValue);
 	$('.chartSlider').attr('data-value',newValue);
 	$('.chartSlider').val(newValue);
-    update_chart($('.selectedID').val(),'chart1');
+	 update_chart($('.selectedID').val(),'chart1');
 	update_chart($('.selectedID').val(),'chart2');
 	
   }
@@ -78,7 +76,7 @@ $(function () {
 
 	$('input#generate').on('click',function(){
 		if( $('.selectedID').val() == ''){
-			log('Please Select a Glacier');
+			//log('Please Select a Glacier');
 			return;
 		}
   		//log('Generating Chart');
@@ -156,13 +154,13 @@ $(function () {
 }) // end function
 
 
-//function log(message){
+/*function log(message){
 //	value = $('textarea#console').val() + Date() + ' ' + message + "\n";
 //	$('textarea#console').val(value);
 //	var elem = document.getElementById('console');
 //	elem.scrollTop = elem.scrollHeight;	
 //}
-
+*/
 
 var TILE_URL = 'http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg';
 // TILE_URL = 'http://via.placeholder.com/256?text=Zoom:+{z}+X:+{x}+Y:+{y}'
@@ -172,6 +170,7 @@ var mapEl;
 var layer;
 var layerID = 'my-custom-layer';
 
+var midLines = new Array();
 var markers = new Array();
 var coordInfoWindows = new Array();
 
@@ -187,6 +186,8 @@ function initMap() {
         var greenland = new google.maps.LatLng(71.7069, -42.6043);
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 3,
+	  maxZoom: 12,
+          minZoom: 2,
           mapTypeId: 'hybrid',
           center: greenland,
           zoomControl: true,
@@ -197,10 +198,10 @@ function initMap() {
 		  fullscreenControl: false
 
         });
+	
+        jsonMarkers = '/assets/markers.json';
 
-        json = '/assets/markers.json';
-
-        $.getJSON(json, function(json_data) {
+        $.getJSON(jsonMarkers, function(json_data) {
 
 			$.each(json_data, function(key, data) {
 
@@ -260,13 +261,57 @@ function initMap() {
 					coordInfoWindow.open(map, this);
 
 					coordInfoWindows.push(coordInfoWindow);
+			      });
+			    
+				jsonShapeFile = '/assets/cacheFolder/' + data.ID + '_Shape.json';
+				$.getJSON(jsonShapeFile, function(shape_data){
+					var midLine = [];
+					var polygon = [];
+					var polygon2 = [];
+					$.each(shape_data.Midline, function(index){
+					midLine.push(shape_data.Midline[index]);
+					});
+					$.each(shape_data.Shear1, function(index){
+					polygon.push(shape_data.Shear1[index]);
+					});		
+                                        $.each(shape_data.Shear2, function(index){
+                                        polygon2.push(shape_data.Shear2[index]);
+                                        });
+					$.each(polygon2, function(){
+					polygon.push(polygon2.pop());
+					});
+	
+				var midLineCoords = [];
+				$.each(midLine, function(index){
+					var coords = {lat: midLine[index][1], lng: midLine[index][0]};
+					midLineCoords.push(coords);
+					});
 
-		        });
+				var midPath = new google.maps.Polyline({
+         				path: midLineCoords,
+         				geodesic: true,
+					strokeColor: '#FF0000',
+					strokeOpacity: 1.0,
+					strokeWeight: 2
+	       				});
+				midPath.setMap(map);
 
-			    // var details = data.website + ", " + data.phone + ".";
-
-			    // bindInfoWindow(marker, map, infowindow, details);
-
+				var polygonCoords = [];
+				$.each(polygon, function(index){
+					var coords = {lat: polygon[index][1], lng: polygon[index][0]};
+					polygonCoords.push(coords); 
+					});
+				var polygon = new google.maps.Polygon({
+					path: polygonCoords,
+					strokeColor: '#0000FF',
+					strokeOpacity: 0.8,
+					strokeWeight: 2,
+					fillColor: '#0000FF',
+					fillOpacity: 0.35
+					});
+				polygon.setMap(map);
+				
+				});
 			});
 
 		});
